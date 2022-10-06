@@ -42,8 +42,8 @@ Here is an example of such images:
 ![plot](cluster_dir/inpainting_imgs/img2.png =302x)
 ![plot](cluster_dir/inpainting_imgs/mask2.png = 302x)
 
-<img src="cluster_dir/inpainting_imgs/img2.png" width="200" height="200" />
-<img src="cluster_dir/inpainting_imgs/mask2.png" width="200" height="200" />
+<img src="./cluster_dir/inpainting_imgs/img2.png" width="200" height="200" />
+<img src="./cluster_dir/inpainting_imgs/mask2.png" width="200" height="200" />
 
 ```
 
