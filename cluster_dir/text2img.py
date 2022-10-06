@@ -39,7 +39,9 @@ print('etter')
 #                'a home for all the critters of the forest, big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k']
 ####################################################################################################################
 
-prompt_list = ['a home for all the critters of the forest, big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k'] * 5
+num_of_imgs = 5
+
+prompt_list = ['a home for all the critters of the forest, big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k'] * num_of_imgs
 
 # Creating a generator mainly for setting some seed if needed, if seed is not uesed a new image will be created everytime using the same prompt
 generator = torch.Generator(device="cuda").manual_seed(1024)

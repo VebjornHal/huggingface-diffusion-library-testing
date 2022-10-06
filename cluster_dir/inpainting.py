@@ -40,7 +40,7 @@ pipe.enable_attention_slicing(8)
 
 num_inference_steps = 400
 guidance_scale = 5.0
-strength = 0.4
+strength = 0.8
 
 # The loop for generating and saving images with the use of the promt_list.
 for idx, prompt in enumerate(prompt_list):
