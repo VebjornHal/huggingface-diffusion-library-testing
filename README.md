@@ -3,13 +3,9 @@ Using huggingface public diffusion library to generate images on the springfield
 
 ## How to generate images from text on the cluster
 
-Just for testing code
+First we have to transfer all necesarry files to the cluster storage space. This can be done with:
 ```
-{
-  "firstName": "John",
-  "lastName": "Smith",
-  "age": 25
-}
+sh sync_to_cluster.sh
 ```
 
 
