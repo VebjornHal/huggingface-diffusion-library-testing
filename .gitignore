@@ -1,3 +1,9 @@
 .DS_Store
 venv/
 cluster_dir/stable-diffusion-v1-4/
+
+# Ignoring local images except for testing imgs
+cluster_dir/imgs/*
+cluster_dir/inpainting_imgs_test/*
+!cluster_dir/inpainting_imgs_test/img2.png
+!cluster_dir/inpainting_imgs_test/mask2.png
