@@ -1,0 +1,21 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: inpainting
+spec:
+  template:
+    spec:
+      containers:
+      - name: inpainting
+        image: "vebjornhal/cluster:diff_lib_test2"
+        workingDir: /storage/diffusion_lib_test
+        command: ["sh", "inpainting.sh"]
+        volumeMounts:
+        - name: storage
+          mountPath: /storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: storage
+      restartPolicy: OnFailure
+  backoffLimit: 0

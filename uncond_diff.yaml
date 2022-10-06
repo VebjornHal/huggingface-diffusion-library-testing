@@ -1,0 +1,21 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: uncond-diff
+spec:
+  template:
+    spec:
+      containers:
+      - name: uncond-diff
+        image: "vebjornhal/cluster:diff_lib_test1"
+        workingDir: /storage/diffusion_lib_test
+        command: ["sh", "uncond_diff.sh"]
+        volumeMounts:
+        - name: storage
+          mountPath: /storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: storage
+      restartPolicy: OnFailure
+  backoffLimit: 0
