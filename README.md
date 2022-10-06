@@ -38,8 +38,8 @@ prompt_list = ['a home for all the critters of the forest, big tree, tall , lush
 In order to use inpainting we have to place an image and a mask image into the folder cluster_dir/inpainting_imgs_test
 Here is an example of such images: 
 
-![plot](cluster_dir/inpainting_imgs/img2.png)
-![plot](cluster_dir/inpainting_imgs/mask2.png)
+![plot](cluster_dir/inpainting_imgs/img2.png =302x)
+![plot](cluster_dir/inpainting_imgs/mask2.png = 302x)
 
 ```
 
