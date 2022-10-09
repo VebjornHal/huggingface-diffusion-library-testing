@@ -2,17 +2,30 @@ import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline
 import random
+import argparse
 
-# Setting up pipeline
-######################################## OLD
-# pipe = StableDiffusionPipeline.from_pretrained(
-#     "./stable-diffusion-v1-4",
-#     revision="fp16",
-#     torch_dtype=torch.float16,
-#     use_auth_token=access_token
-# )
-# pipe = pipe.to("cuda")
-########################################
+num_inference_steps = 500
+guidance_scale = 7.5
+num_of_imgs = 5
+img_h = 512
+img_w = 512
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-p', '--prompt', metavar='prompt', type=str, help='enter text prompt',
+                    default='a home for all the critters of the forest,'
+                            ' big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k')
+parser.add_argument('-n', '--num_of_imgs', metavar='number of images', type=int,
+                    help='enter desired number of images', default=5)
+parser.add_argument('-gs', '--guidance_scale', metavar='guidance scale', type=int,
+                    help='enter number between ', default=7.5)
+parser.add_argument('-H', '--height', metavar='height', type=int,
+                    help=('height of generated image in number of pixels'),
+                    default=512)
+parser.add_argument('-W', '--width', metavar='width', type=int,
+                    help=('width of generated image in number of pixels'),
+                    default=512)
+args = parser.parse_args()
+txt_prompt = args.prompt
 
 pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4",
                                                revision="fp16",
@@ -39,9 +52,8 @@ print('etter')
 #                'a home for all the critters of the forest, big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k']
 ####################################################################################################################
 
-num_of_imgs = 5
 
-prompt_list = ['a home for all the critters of the forest, big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k'] * num_of_imgs
+prompt_list = [txt_prompt] * num_of_imgs
 
 # Creating a generator mainly for setting some seed if needed, if seed is not uesed a new image will be created everytime using the same prompt
 generator = torch.Generator(device="cuda").manual_seed(1024)
@@ -50,8 +62,7 @@ generator = torch.Generator(device="cuda").manual_seed(1024)
 print(pipe.unet.config.attention_head_dim)
 pipe.enable_attention_slicing(8)
 
-num_inference_steps = 500
-guidance_scale = 7.5
+
 
 for idx, prompt in enumerate(prompt_list):
     with autocast("cuda"):
