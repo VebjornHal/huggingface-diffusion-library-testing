@@ -9,7 +9,7 @@ spec:
       - name: text2img
         image: "vebjornhal/cluster:diff_lib_test2"
         workingDir: /storage/diffusion_lib_test
-        command: ["sh", "stable-diff_init.sh"]
+        command: ["sh", "text2img.sh"]
         volumeMounts:
         - name: storage
           mountPath: /storage

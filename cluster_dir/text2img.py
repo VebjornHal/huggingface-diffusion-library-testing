@@ -13,10 +13,10 @@ img_w = 512
 parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--prompt', metavar='prompt', type=str, help='enter text prompt',
                     default='a home for all the critters of the forest,'
-                            ' big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k')
+                            ' big tree, tall, lush, calm, book cover, ultra realistic, 4k, 8k')
 parser.add_argument('-n', '--num_of_imgs', metavar='number of images', type=int,
                     help='enter desired number of images', default=5)
-parser.add_argument('-gs', '--guidance_scale', metavar='guidance scale', type=int,
+parser.add_argument('-gs', '--guidance_scale', metavar='guidance scale', type=float,
                     help='enter number between ', default=7.5)
 parser.add_argument('-H', '--height', metavar='height', type=int,
                     help=('height of generated image in number of pixels'),
@@ -24,19 +24,26 @@ parser.add_argument('-H', '--height', metavar='height', type=int,
 parser.add_argument('-W', '--width', metavar='width', type=int,
                     help=('width of generated image in number of pixels'),
                     default=512)
+parser.add_argument('-n-inf-s', '--num_inference_steps', metavar='number of inference steps',
+                    help='enter number of inference steps', type=int, default=70)
 args = parser.parse_args()
-txt_prompt = args.prompt
 
+txt_prompt = args.prompt
+num_of_imgs = args.num_of_imgs
+guidance_scale = args.guidance_scale
+img_h = args.height
+img_w = args.width
+num_inference_steps = args.num_inference_steps
+
+# Creating pipe
 pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4",
                                                revision="fp16",
                                                torch_dtype=torch.float16
                                                )
 pipe = pipe.to("cuda")
 
-# Checking number of gpus available
-print('før')
-print(torch.cuda.device_count())
-print('etter')
+# Turning of NSFW filter by replacing with dummy function
+pipe.safety_checker = dummy
 
 ######################################--Example promts--############################################################
 # prompt_list = ['fantasy land, in style of adventure time',
@@ -62,12 +69,10 @@ generator = torch.Generator(device="cuda").manual_seed(1024)
 print(pipe.unet.config.attention_head_dim)
 pipe.enable_attention_slicing(8)
 
-
-
 for idx, prompt in enumerate(prompt_list):
     with autocast("cuda"):
-        image = pipe(height=1024,  # Image height
-                     width=1024,  # Image width
+        image = pipe(height=img_h,  # Image height
+                     width=img_w,  # Image width
                      prompt=prompt,
                      num_inference_steps=num_inference_steps,
                      generator=None,  # Can also use the generator created above if a seed is needed
