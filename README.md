@@ -14,6 +14,9 @@ sh sync_to_cluster.sh
 This will create a folder and transfer necessary files in the root directory of the cluster storage space called *diffusion_lib_test*.  
 
 ### **text2img**
+Example image of what has been created with the prompt *'a home for all the critters of the forest, big tree, tall, lush, calm, book cover, ultra realistic, 4k, 8k'*
+
+<img src="./cluster_dir/imgs/text2img_rm_image.png">
 
 In order to generate image from text promt with the cluster:
 
@@ -23,19 +26,29 @@ frink run inpainting.yaml -f
 
 ```
 
-For changing the image promt one can just change the variable *promt_list* in text2img.py.
-Below is an example promt list: 
+Many variables can be changed when generating images: 
 
-```python
+* -p: Image prompt
+* -n: Number of images to be generated
+* -gs: Guidance scale
+* -H: Height
+* -W: Width 
+* -n-inf-steps: Number of inference steps
 
-prompt_list = ['a home for all the critters of the forest, big tree, tall , lush , calm , book cover , ultra realistic , 4k , 8k']
+They can all be changed by changing whats in the *text2img.sh* file.
+
+```shell
+
+python3 text2img.py \
+-p 'a home for all the critters of the forest, big tree, tall, lush, calm, book cover, ultra realistic, 4k, 8k' \
+-n 5 -gs 7.5 -H 512 -W 512 -n-inf-s 80
 
 
 ```
 
 After each change of files contained in the *cluster_dir* directory, the command
 
-```
+```shell
 
 sh sync_to_cluster.sh
 
@@ -46,18 +59,23 @@ has to be run again in order to sync the change with the cluster storage.
 ### **Inpainting**
 
 In order to use inpainting we have to place an image to inpaint and a mask image into the folder cluster_dir/inpainting_imgs_test
-Here is an example of such images: 
+Here is an example of such images (The order: original image, mask image, generated image): 
+
 
 <p float="left">
-  <img src="./cluster_dir/inpainting_imgs_test/img2.png" width=302 height=403>
+  <img src="./cluster_dir/inpainting_imgs_test/img2.png" width="302" height="403">
   <img src="./cluster_dir/inpainting_imgs_test/mask2.png" width=302 height=403>
+  <img src="./cluster_dir/imgs/inpainting_rm_image.png" width=302 height=403>
 </p>
+
+
+
 
 In the file inpainting.py one can change the variable *prompt_list* in order to change the prompt.
 
 ### Changing the parameters
 
-in the *.py* files where there are pipeline one can easily change the parameters:
+in the *.sh* files where there are parameters one can easily. 
 
 * **num_inference_steps:** The reference number of denoising steps. More denoising steps usually lead to a higher quality image at
                 the expense of slower inference. This parameter will be modulated by `strength`, as explained above.
@@ -69,25 +87,11 @@ in the *.py* files where there are pipeline one can easily change the parameters
                 1`. Higher guidance scale encourages to generate images that are closely linked to the text `prompt`,
                 usually at the expense of lower image quality.
 
-```python
+```shell
 
-num_inference_steps = 400
-guidance_scale = 5.0
-strength = 0.8
-
-# The loop for generating and saving images with the use of the promt_list.
-for idx, prompt in enumerate(prompt_list):
-    with autocast("cuda"):
-        image = pipe(prompt=prompt,
-                     init_image=init_image,
-                     mask_image=mask_image,
-                     strength=strength,  # Default 0.8
-                     guidance_scale=guidance_scale,  # Default 7.5
-                     num_inference_steps=num_inference_steps,
-                     generator=None).images[0]
-    save_promt = prompt.replace(' ', '-').replace(',', '')
-    image.save(f'imgs/{save_promt}_nis{num_inference_steps}_gs{guidance_scale}_s{strength}'
-               f'_{random.randint(0, 1e6)}.png')
+python3 inpainting.py \
+-p 'cola can, red, standing on wooden table, 4k, 8k' \
+-n 10 -gs 20 -s 0.5 -n-inf-s 500
 
 ```
 
@@ -98,4 +102,18 @@ For starting generating in the masked area use the command:
 frink run inpainting.yaml -f 
 
 ```
+
+WHen the cluster is done generating we have to resync back with the command: 
+
+```shell
+
+sh sync_from_cluster.sh
+
+```
+
+The newly generated images will be placed in the folder *cluster_dir/imgs/* and have a file name 
+which includes the prompt and all the parameters used and a uniqe image id randomly generated at the end.
+
+
+
 

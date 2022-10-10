@@ -4,6 +4,8 @@ cluster_dir/stable-diffusion-v1-4/
 
 # Ignoring local images except for testing imgs
 cluster_dir/imgs/*
+!cluster_dir/imgs/text2img_rm_image.png
+!cluster_dir/imgs/inpainting_rm_image.png
 !cluster_dir/imgs/.gitkeep
 
 cluster_dir/inpainting_imgs_test/*
