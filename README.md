@@ -103,7 +103,7 @@ frink run inpainting.yaml -f
 
 ```
 
-WHen the cluster is done generating we have to resync back with the command: 
+When the cluster is done generating we have to resync back with the command: 
 
 ```shell
 
