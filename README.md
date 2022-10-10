@@ -63,9 +63,9 @@ Here is an example of such images (The order: original image, mask image, genera
 
 
 <p float="left">
-  <img src="./cluster_dir/inpainting_imgs_test/img2.png" width="302" height="403">
-  <img src="./cluster_dir/inpainting_imgs_test/mask2.png" width=302 height=403>
-  <img src="./cluster_dir/imgs/inpainting_rm_image.png" width=302 height=403>
+  <img src="./cluster_dir/inpainting_imgs_test/img2.png" width="201" height="267">
+  <img src="./cluster_dir/inpainting_imgs_test/mask2.png" width="201" height="267">
+  <img src="./cluster_dir/imgs/inpainting_rm_image.png" width="201" height="267">
 </p>
 
 
