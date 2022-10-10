@@ -14,6 +14,10 @@ img_h = 512
 img_w = 512
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-img", "--image", type=str, default="img2", help="Filename of image to be inpainted")
+
+parser.add_argument("-mask", "--mask", type=str, default="mask2", help="Filename of mask image to be inpainted")
+
 parser.add_argument('-p', '--prompt', metavar='prompt', type=str, help='enter text prompt',
                     default='cola can, red, standing on wooden table, 4k, 8k')
 parser.add_argument('-n', '--num_of_imgs', metavar='number of images', type=int,
@@ -32,6 +36,8 @@ parser.add_argument('-s', '--strength', metavar='strength', help='type in desire
                     type=float, default=0.7)
 args = parser.parse_args()
 
+img_name = args.image
+mask_name = args.mask
 txt_prompt = args.prompt
 num_of_imgs = args.num_of_imgs
 guidance_scale = args.guidance_scale
@@ -42,8 +48,8 @@ strength = args.strength
 
 from diffusers import StableDiffusionInpaintPipeline
 
-init_image = PIL.Image.open('inpainting_imgs_test/img2.png').convert("RGB").resize((512, 512))
-mask_image = PIL.Image.open('inpainting_imgs_test/mask2.png').convert("RGB").resize((512, 512))
+init_image = PIL.Image.open(f'./inpainting_imgs_test/{img_name}').convert("RGB").resize((512, 512))
+mask_image = PIL.Image.open(f'./inpainting_imgs_test/{mask_name}').convert("RGB").resize((512, 512))
 
 # Creating the inpainting pipline
 device = "cuda"

@@ -91,6 +91,7 @@ in the *.sh* files where there are parameters one can easily.
 
 python3 inpainting.py \
 -p 'cola can, red, standing on wooden table, 4k, 8k' \
+-img img2.png -mask mask2.png
 -n 10 -gs 20 -s 0.5 -n-inf-s 500
 
 ```
