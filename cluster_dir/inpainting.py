@@ -6,12 +6,16 @@ import PIL
 import ftfy
 import random
 import argparse
+from diffusers import StableDiffusionInpaintPipeline
+from diffusers import LMSDiscreteScheduler
 
+# Important parameters which can be tweaked
 num_inference_steps = 500
 guidance_scale = 7.5
 num_of_imgs = 5
 img_h = 512
 img_w = 512
+useFP16 = True
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-img", "--image", type=str, default="img2", help="Filename of image to be inpainted")
@@ -46,18 +50,46 @@ img_w = args.width
 num_inference_steps = args.num_inference_steps
 strength = args.strength
 
-from diffusers import StableDiffusionInpaintPipeline
+# print variables
+print("img_name: ", img_name)
+print("mask_name: ", mask_name)
+print("txt_prompt: ", txt_prompt)
+print("num_of_imgs: ", num_of_imgs)
+print("guidance_scale: ", guidance_scale)
+print("img_h: ", img_h)
+print("img_w: ", img_w)
+print("num_inference_steps: ", num_inference_steps)
+print("strength: ", strength)
 
 init_image = PIL.Image.open(f'./inpainting_imgs_test/{img_name}').convert("RGB").resize((512, 512))
 mask_image = PIL.Image.open(f'./inpainting_imgs_test/{mask_name}').convert("RGB").resize((512, 512))
 
-# Creating the inpainting pipline
+# Importing a different scheduler than the default one.
+lms = LMSDiscreteScheduler(
+    beta_start=0.00085,
+    beta_end=0.012,
+    beta_schedule="scaled_linear"
+)
+
 device = "cuda"
-pipe = StableDiffusionInpaintPipeline.from_pretrained("./stable-diffusion-v1-4",
-                                                      revision="fp16",
-                                                      torch_dtype=torch.float16,
-                                                      use_auth_token=False
-                                                      ).to(device)
+
+# Creating the inpainting pipline with float 16 for using less memory
+pipe_fp26 = StableDiffusionInpaintPipeline.from_pretrained("./stable-diffusion-v1-4",
+                                                           revision="fp16",
+                                                           torch_dtype=torch.float16,
+                                                           use_auth_token=False,
+                                                           ).to(device)
+
+# Creating original pipe
+pipe_original = StableDiffusionInpaintPipeline.from_pretrained("./stable-diffusion-v1-4",
+                                                               use_auth_token=False,
+                                                               sheduler=lms
+                                                               ).to(device)
+
+if useFP16:
+    pipe = pipe_fp26
+else:
+    pipe = pipe_original
 
 
 # Dummy function to replace the safety checker function in order to turn of the faulty NSFW filter from huggingface
@@ -90,7 +122,3 @@ for idx, prompt in enumerate(prompt_list):
     save_promt = prompt.replace(' ', '-').replace(',', '')
     image.save(f'imgs/{save_promt}_nis{num_inference_steps}_gs{guidance_scale}_s{strength}'
                f'_{random.randint(0, 1e6)}.png')
-
-
-
-

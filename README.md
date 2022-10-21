@@ -69,13 +69,7 @@ Here is an example of such images (The order: original image, mask image, genera
 </p>
 
 
-
-
-In the file inpainting.py one can change the variable *prompt_list* in order to change the prompt.
-
 ### Changing the parameters
-
-in the *.sh* files where there are parameters one can easily. 
 
 * **num_inference_steps:** The reference number of denoising steps. More denoising steps usually lead to a higher quality image at
                 the expense of slower inference. This parameter will be modulated by `strength`, as explained above.
