@@ -125,7 +125,7 @@ any input prompt. The last line concatenates both the unconditional and conditio
 #### Prepping scheduler
 
 The scheduler containes all parameters for the gaussian distributions at each timestep $t$, such as $\alpha_t$, 
-$\cumprod \alpha_t$ and $\beta_t$.
+$\prod \alpha_t$ and $\beta_t$.
 
 ```python
 
