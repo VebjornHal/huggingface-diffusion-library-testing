@@ -1,6 +1,9 @@
 .DS_Store
 venv/
 cluster_dir/stable-diffusion-v1-4/
+cluster_dir/stable-diffusion-v1-5/
+cluster_dir/clip-vit-large-patch14
+cluster_dir/stable-diffusion-inpainting
 
 # Ignoring local images except for testing imgs
 cluster_dir/imgs/*

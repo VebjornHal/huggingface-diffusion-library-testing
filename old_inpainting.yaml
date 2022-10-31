@@ -7,9 +7,9 @@ spec:
     spec:
       containers:
       - name: inpainting
-        image: "vebjornhal/cluster:diff_lib_test"
+        image: "vebjornhal/cluster:diff_lib_test2"
         workingDir: /storage/diffusion_lib_test
-        command: ["sh", "inpainting.sh"]
+        command: ["sh", "old_inpainting.sh"]
         volumeMounts:
         - name: storage
           mountPath: /storage

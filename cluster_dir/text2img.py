@@ -35,14 +35,30 @@ img_h = args.height
 img_w = args.width
 num_inference_steps = args.num_inference_steps
 
+# Checking if height and width is dividable by 8 and if not, make it dividable by 8
+if img_h % 8 != 0 or img_w % 8 != 0:
+    img_h = int(img_h / 8) * 8
+    img_w = int(img_w / 8) * 8
+
+# Printing all variables to console
+print('txt_prompt: ', txt_prompt)
+print('num_of_imgs: ', num_of_imgs)
+print('guidance_scale: ', guidance_scale)
+print('img_h: ', img_h)
+print('img_w: ', img_w)
+print('num_inference_steps: ', num_inference_steps)
+
 # Creating pipe
-pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-4",
+pipe = StableDiffusionPipeline.from_pretrained("./stable-diffusion-v1-5",
                                                revision="fp16",
                                                torch_dtype=torch.float16
                                                )
 pipe = pipe.to("cuda")
 
 # Turning of NSFW filter by replacing with dummy function
+# Dummy function to replace the safety checker function in order to turn of the faulty NSFW filter from huggingface
+def dummy(images, **kwargs):
+    return images, False
 pipe.safety_checker = dummy
 
 ######################################--Example promts--############################################################

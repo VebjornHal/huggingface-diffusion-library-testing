@@ -1,15 +1,15 @@
 kind: Job
 apiVersion: batch/v1
 metadata:
-  name: inpainting
+  name: custom-stablediff
 spec:
   template:
     spec:
       containers:
-      - name: inpainting
+      - name: custom-stablediff
         image: "vebjornhal/cluster:diff_lib_test"
         workingDir: /storage/diffusion_lib_test
-        command: ["sh", "inpainting.sh"]
+        command: ["sh", "custom_stablediff.sh"]
         volumeMounts:
         - name: storage
           mountPath: /storage

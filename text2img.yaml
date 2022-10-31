@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: text2img
-        image: "vebjornhal/cluster:diff_lib_test2"
+        image: "vebjornhal/cluster:diff_lib_test"
         workingDir: /storage/diffusion_lib_test
         command: ["sh", "text2img.sh"]
         volumeMounts:

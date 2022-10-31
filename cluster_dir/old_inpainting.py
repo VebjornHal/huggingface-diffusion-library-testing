@@ -16,7 +16,6 @@ num_of_imgs = 5
 img_h = 512
 img_w = 512
 useFP16 = True
-device = "cuda"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-img", "--image", type=str, default="img2", help="Filename of image to be inpainted")
@@ -70,15 +69,32 @@ print("strength: ", strength)
 init_image = PIL.Image.open(f'./inpainting_imgs_test/{img_name}').convert("RGB").resize((512, 512))
 mask_image = PIL.Image.open(f'./inpainting_imgs_test/{mask_name}').convert("RGB").resize((512, 512))
 
-prompt_list = [txt_prompt] * num_of_imgs
+# Importing a different scheduler than the default one.
+lms = LMSDiscreteScheduler(
+    beta_start=0.00085,
+    beta_end=0.012,
+    beta_schedule="scaled_linear"
+)
 
-# Creating custom generator, does not have to be used
-generator = torch.Generator(device=device).manual_seed(0)  # change the seed to get different results
+device = "cuda"
 
-pipe = StableDiffusionInpaintPipeline.from_pretrained(
-    "./stable-diffusion-inpainting",
-    revision="fp16",
-    torch_dtype=torch.float16).to(device)
+# Creating the inpainting pipline with float 16 for using less memory
+pipe_fp26 = StableDiffusionInpaintPipeline.from_pretrained("./stable-diffusion-v1-5",
+                                                           revision="fp16",
+                                                           torch_dtype=torch.float16,
+                                                           use_auth_token=False,
+                                                           ).to(device)
+
+# Creating original pipe
+pipe_original = StableDiffusionInpaintPipeline.from_pretrained("./stable-diffusion-v1-5",
+                                                               use_auth_token=False,
+                                                               sheduler=lms
+                                                               ).to(device)
+
+if useFP16:
+    pipe = pipe_fp26
+else:
+    pipe = pipe_original
 
 
 # Dummy function to replace the safety checker function in order to turn of the faulty NSFW filter from huggingface
@@ -86,7 +102,13 @@ def dummy(images, **kwargs):
     return images, False
 
 
+# Turning of NSFW filter by replacing with dummy function
 pipe.safety_checker = dummy
+
+prompt_list = [txt_prompt] * num_of_imgs
+
+# Creating custom generator, does not have to be used
+generator = torch.Generator(device="cuda").manual_seed(123123456)
 
 # Can be used to save memory
 print(pipe.unet.config.attention_head_dim)
@@ -94,14 +116,14 @@ pipe.enable_attention_slicing(8)
 
 # The loop for generating and saving images with the use of the promt_list.
 for idx, prompt in enumerate(prompt_list):
-    image = pipe(prompt=prompt,
-                 image=init_image,
-                 mask_image=mask_image,
-                 guidance_scale=guidance_scale,
-                 generator=None,
-                 num_inference_steps=num_inference_steps,
-                 strength=strength,
-                 ).images[0]
+    with autocast("cuda"):
+        image = pipe(prompt=prompt,
+                     init_image=init_image,
+                     mask_image=mask_image,
+                     strength=strength,  # Default 0.8
+                     guidance_scale=guidance_scale,  # Default 7.5
+                     num_inference_steps=num_inference_steps,
+                     generator=None).images[0]
     save_promt = prompt.replace(' ', '-').replace(',', '')
     image.save(f'imgs/{save_promt}_nis{num_inference_steps}_gs{guidance_scale}_s{strength}'
                f'_{random.randint(0, 1e6)}.png')
