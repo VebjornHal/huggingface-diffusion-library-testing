@@ -16,7 +16,7 @@ num_of_imgs = 5
 img_h = 512
 img_w = 512
 useFP16 = True
-device = "cuda"
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-img", "--image", type=str, default="img2", help="Filename of image to be inpainted")
@@ -67,8 +67,13 @@ print("img_w: ", img_w)
 print("num_inference_steps: ", num_inference_steps)
 print("strength: ", strength)
 
-init_image = PIL.Image.open(f'./inpainting_imgs_test/{img_name}').convert("RGB").resize((512, 512))
-mask_image = PIL.Image.open(f'./inpainting_imgs_test/{mask_name}').convert("RGB").resize((512, 512))
+# With resizing
+# init_image = PIL.Image.open(f'./inpainting_imgs_test/{img_name}').convert("RGB").resize((512, 512))
+# mask_image = PIL.Image.open(f'./inpainting_imgs_test/{mask_name}').convert("RGB").resize((512, 512))
+
+# Trying to not resize the images to 512x512
+init_image = PIL.Image.open(f'./inpainting_imgs_test/{img_name}').convert("RGB").resize((img_h, img_w))
+mask_image = PIL.Image.open(f'./inpainting_imgs_test/{mask_name}').convert("RGB").resize((img_h, img_w))
 
 prompt_list = [txt_prompt] * num_of_imgs
 
@@ -97,6 +102,8 @@ for idx, prompt in enumerate(prompt_list):
     image = pipe(prompt=prompt,
                  image=init_image,
                  mask_image=mask_image,
+                 height=img_h,
+                 width=img_w,
                  guidance_scale=guidance_scale,
                  generator=None,
                  num_inference_steps=num_inference_steps,

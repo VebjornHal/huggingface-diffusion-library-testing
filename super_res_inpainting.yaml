@@ -1,15 +1,15 @@
 kind: Job
 apiVersion: batch/v1
 metadata:
-  name: inpainting
+  name: super-res-inpainting
 spec:
   template:
     spec:
       containers:
-      - name: inpainting
-        image: "vebjornhal/cluster:diff_lib_test2"
+      - name: super-res-inpainting
+        image: "vebjornhal/cluster:diff_lib_test"
         workingDir: /storage/diffusion_lib_test
-        command: ["sh", "old_inpainting.sh"]
+        command: ["sh", "super_res_inpainting.sh"]
         volumeMounts:
         - name: storage
           mountPath: /storage

@@ -134,7 +134,7 @@ scheduler.set_timesteps(num_inference_steps)
 ```
 
 #### Prepping the latent space
-
+ls
 Here random noise in latent space is created. A divisor of 8 is used to achieve lower dimensionality.
 The strucutre of the latent space is (batch_size, 512, height/8, width/8). Also we put in the generator as parameter
 in order to use the wanted seed. The two last lines make sure the latent space is ready for gpu and that latent space

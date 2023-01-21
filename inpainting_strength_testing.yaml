@@ -1,15 +1,15 @@
 kind: Job
 apiVersion: batch/v1
 metadata:
-  name: inpainting
+  name: inpainting-strength-testing
 spec:
   template:
     spec:
       containers:
-      - name: inpainting
-        image: "vebjornhal/cluster:diff_lib_test"
+      - name: inpainting-strength-testing
+        image: "vebjornhal/cluster:diff_lib_test_v5"
         workingDir: /storage/diffusion_lib_test
-        command: ["sh", "inpainting.sh"]
+        command: ["sh", "inpainting_strength_testing.sh"]
         volumeMounts:
         - name: storage
           mountPath: /storage

@@ -1,9 +1,30 @@
 .DS_Store
+.vscode/
+
+# All folders
 venv/
+landscape-images-dataset
 cluster_dir/stable-diffusion-v1-4/
 cluster_dir/stable-diffusion-v1-5/
 cluster_dir/clip-vit-large-patch14
 cluster_dir/stable-diffusion-inpainting
+cluster_dir/img2img_imgs
+cluster_dir/inpainting_strength_testing_files
+cluster_dir/landscape_images
+cluster_dir/landscape_images_masks
+cluster_dir/landscape_images_masks_v2
+cluster_dir/landscape_images_v2
+cluster_dir/mnist_dataset_train
+cluster_dir/new_landscape_images
+cluster_dir/only_landscape_image_12_for_fix
+cluster_dir/stable-diffusion-inpainting
+
+# All .py files
+cluster_dir/importing_mnist.py
+cluster_dir/inpainting_strength_testing.ipynb
+cluster_dir/importing_pkl_file_viewing.py
+cluster_dir/inpainting_strength_testing_pkl_file_investigation.py
+rand_sel_landscape_imgs.py
 
 # Ignoring local images except for testing imgs
 cluster_dir/imgs/*
@@ -14,3 +35,4 @@ cluster_dir/imgs/*
 cluster_dir/inpainting_imgs_test/*
 !cluster_dir/inpainting_imgs_test/img2.png
 !cluster_dir/inpainting_imgs_test/mask2.png
+
