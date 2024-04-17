@@ -1,4 +1,4 @@
-w# huggingface-diffusion-library-testing
+# huggingface-diffusion-library-testing
 Using huggingface public diffusion library to generate images on the springfield cluster. 
 
 ## How to generate images from text prompts, using the cluster
